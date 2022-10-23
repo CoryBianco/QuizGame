@@ -8,7 +8,8 @@ public class Quiz : MonoBehaviour {
 
     [Header("Questions")]
     [SerializeField] TextMeshProUGUI questionText;
-    [SerializeField] QuestionSO question;
+    [SerializeField] List<QuestionSO> questions;
+    QuestionSO currentQuestion;
 
     [Header("Answers")]
     [SerializeField] GameObject[] answerButtons;
@@ -25,7 +26,6 @@ public class Quiz : MonoBehaviour {
 
     void Start() {
         timer = FindObjectOfType<Timer>();
-        GetNextQuestion();
     }
 
     void Update() {
@@ -42,7 +42,7 @@ public class Quiz : MonoBehaviour {
 
     void DisplayAnswer(int index) {
         Image buttonImage = answerButtons[index].GetComponent<Image>();
-        if (index == question.GetCorrectAnswerIndex()) {
+        if (index == currentQuestion.GetCorrectAnswerIndex()) {
             questionText.text = "Correct";
             buttonImage.color = new Color32(0, 255, 47, 255);
         } else {
@@ -59,19 +59,31 @@ public class Quiz : MonoBehaviour {
     }
 
     void GetNextQuestion() {
-        SetButtonState(true);
-        SetDefaultButtonColors();
-        DisplayQuestion();
+        if (questions.Count > 0) {
+            SetButtonState(true);
+            SetDefaultButtonColors();
+            GetRandomQuestion();
+            DisplayQuestion();
+        }
+    }
+
+    void GetRandomQuestion() {
+        int index = Random.Range(0, questions.Count);
+        currentQuestion = questions[index];
+        if (questions.Contains(currentQuestion)) {
+            questions.Remove(currentQuestion);
+        }
+
     }
 
     public void DisplayQuestion() {
-        questionText.text = question.GetQuestionText();
+        questionText.text = currentQuestion.GetQuestionText();
         TextMeshProUGUI buttonText;
 
         int index = 0;
         foreach (GameObject button in answerButtons) {
             buttonText = button.GetComponentInChildren<TextMeshProUGUI>();
-            buttonText.text = question.GetAnswer(index);
+            buttonText.text = currentQuestion.GetAnswer(index);
             index++;
         }
     }
