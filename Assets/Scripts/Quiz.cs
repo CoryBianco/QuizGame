@@ -6,18 +6,41 @@ using UnityEngine.UI;
 
 public class Quiz : MonoBehaviour {
 
+    [Header("Questions")]
     [SerializeField] TextMeshProUGUI questionText;
     [SerializeField] QuestionSO question;
+
+    [Header("Answers")]
     [SerializeField] GameObject[] answerButtons;
     int correctAnswerIndex;
+    bool hasAnsweredEarly;
+
+    [Header("Buttons")]
     [SerializeField] Sprite defualtAnswerSprite;
     [SerializeField] Sprite correctAnswerSprite;
 
+    [Header("Timer")]
+    [SerializeField] Image timerImage;
+    Timer timer;
+
     void Start() {
+        timer = FindObjectOfType<Timer>();
         GetNextQuestion();
     }
 
-    public void OnAnswerSelected(int index) {
+    void Update() {
+        timerImage.fillAmount = timer.fillFraction;
+        if (timer.loadNextQuestion) {
+            hasAnsweredEarly = false;
+            GetNextQuestion();
+            timer.loadNextQuestion = false;
+        } else if (!hasAnsweredEarly && !timer.isAnsweringQuestion) {
+            DisplayAnswer(-1);
+            SetButtonState(false);
+        }
+    }
+
+    void DisplayAnswer(int index) {
         Image buttonImage = answerButtons[index].GetComponent<Image>();
         if (index == question.GetCorrectAnswerIndex()) {
             questionText.text = "Correct";
@@ -26,7 +49,13 @@ public class Quiz : MonoBehaviour {
             questionText.text = "Your fuckin ass got it wrong";
             buttonImage.color = new Color32(255, 0, 0, 255);
         }
+    }
+
+    public void OnAnswerSelected(int index) {
+        hasAnsweredEarly = true;
+        DisplayAnswer(index);
         SetButtonState(false);
+        timer.Canceltimer();
     }
 
     void GetNextQuestion() {

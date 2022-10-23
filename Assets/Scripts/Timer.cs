@@ -8,13 +8,17 @@ public class Timer : MonoBehaviour {
     [SerializeField] float postAnswerTime = 5f;
 
     public bool loadNextQuestion;
-    public bool isAnsweringQuestion = false;
+    public bool isAnsweringQuestion;
     public float fillFraction;
 
     float timerValue;
 
     void Update() {
         UpdateTimer();
+    }
+
+    public void Canceltimer() {
+        timerValue = 0;
     }
 
     void UpdateTimer() {
@@ -36,7 +40,5 @@ public class Timer : MonoBehaviour {
                 timerValue = questionTime;
             }
         }
-
-        Debug.Log(isAnsweringQuestion + ": " + timerValue + " = " + fillFraction);
     }
 }
