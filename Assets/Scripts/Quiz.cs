@@ -24,8 +24,13 @@ public class Quiz : MonoBehaviour {
     [SerializeField] Image timerImage;
     Timer timer;
 
+    [Header("Scoring")]
+    [SerializeField] TextMeshProUGUI score;
+    ScoreKeeper scoreKeeper;
+
     void Start() {
         timer = FindObjectOfType<Timer>();
+        scoreKeeper = FindObjectOfType<ScoreKeeper>();
     }
 
     void Update() {
@@ -45,6 +50,7 @@ public class Quiz : MonoBehaviour {
         if (index == currentQuestion.GetCorrectAnswerIndex()) {
             questionText.text = "Correct";
             buttonImage.color = new Color32(0, 255, 47, 255);
+            scoreKeeper.IncrementCorrectAnswers();
         } else {
             questionText.text = "Your fuckin ass got it wrong";
             buttonImage.color = new Color32(255, 0, 0, 255);
@@ -56,6 +62,7 @@ public class Quiz : MonoBehaviour {
         DisplayAnswer(index);
         SetButtonState(false);
         timer.Canceltimer();
+        score.text = "Score: " + scoreKeeper.CalculateScore() + "%";
     }
 
     void GetNextQuestion() {
@@ -64,6 +71,7 @@ public class Quiz : MonoBehaviour {
             SetDefaultButtonColors();
             GetRandomQuestion();
             DisplayQuestion();
+            scoreKeeper.IncrementSeenQuestions();
         }
     }
 

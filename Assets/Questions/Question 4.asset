@@ -13,3 +13,9 @@ MonoBehaviour:
   m_Name: Question 4
   m_EditorClassIdentifier: 
   question: Are Cody's magic tricks cool?
+  answers:
+  - 1
+  - 2
+  - 3
+  - 4
+  correctIndex: 0
