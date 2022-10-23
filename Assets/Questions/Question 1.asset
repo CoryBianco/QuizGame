@@ -13,3 +13,9 @@ MonoBehaviour:
   m_Name: Question 1
   m_EditorClassIdentifier: 
   question: Who is the best at DOTA 2?
+  answers:
+  - Andrew
+  - Zach
+  - Parker
+  - Cory
+  correctIndex: 3
